@@ -116,6 +116,13 @@ export default function TicketsScreen() {
     return matchesSearch && matchesFilter;
   });
 
+  const ticketStats = {
+    total: tickets.length,
+    open: tickets.filter(t => t.status === 'open').length,
+    inProgress: tickets.filter(t => t.status === 'in-progress').length,
+    resolved: tickets.filter(t => t.status === 'resolved').length,
+  };
+
   const renderTicketCard = ({ item }: { item: TicketItem }) => (
     <TouchableOpacity 
       style={styles.ticketCard}
@@ -177,6 +184,26 @@ export default function TicketsScreen() {
         >
           <Plus color="white" size={24} />
         </TouchableOpacity>
+      </View>
+
+      {/* Ticket Stats Summary */}
+      <View style={styles.statsContainer}>
+        <View style={styles.statItem}>
+          <Text style={styles.statNumber}>{ticketStats.total}</Text>
+          <Text style={styles.statLabel}>Total</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statNumber, { color: '#EF4444' }]}>{ticketStats.open}</Text>
+          <Text style={styles.statLabel}>Open</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statNumber, { color: '#F59E0B' }]}>{ticketStats.inProgress}</Text>
+          <Text style={styles.statLabel}>In Progress</Text>
+        </View>
+        <View style={styles.statItem}>
+          <Text style={[styles.statNumber, { color: '#10B981' }]}>{ticketStats.resolved}</Text>
+          <Text style={styles.statLabel}>Resolved</Text>
+        </View>
       </View>
 
       <View style={styles.searchContainer}>
@@ -404,5 +431,34 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     textAlign: 'center',
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    marginHorizontal: 20,
+    marginBottom: 20,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  statItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    fontWeight: '600',
   },
 });
