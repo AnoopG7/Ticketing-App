@@ -26,7 +26,7 @@ export default function LoginScreen() {
   const roles = [
     { key: 'student' as UserRole, label: 'Student', color: '#2563EB', icon: '👨‍🎓' },
     { key: 'parent' as UserRole, label: 'Parent', color: '#059669', icon: '👨‍👩‍👧‍👦' },
-    { key: 'ops' as UserRole, label: 'Operations', color: '#16A34A', icon: '⚙️' },
+    { key: 'ops' as UserRole, label: 'Operations', color: '#F59E0B', icon: '⚙️' },
     { key: 'admin' as UserRole, label: 'Administrator', color: '#7C3AED', icon: '👑' },
   ];
 

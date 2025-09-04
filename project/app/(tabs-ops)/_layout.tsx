@@ -1,12 +1,12 @@
 import { Tabs } from 'expo-router';
-import { Briefcase, Ticket, Users, MessageSquare, User } from 'lucide-react-native';
+import { Briefcase, Ticket, Users, User, CheckSquare } from 'lucide-react-native';
 
 export default function OpsTabLayout() {
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#16A34A',
+        tabBarActiveTintColor: '#F59E0B',
         tabBarInactiveTintColor: '#6B7280',
         tabBarStyle: {
           backgroundColor: 'white',
@@ -32,9 +32,18 @@ export default function OpsTabLayout() {
         }}
       />
       <Tabs.Screen
+        name="tasks"
+        options={{
+          title: 'Tasks',
+          tabBarIcon: ({ size, color }: { size: number; color: string }) => (
+            <CheckSquare size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="queue"
         options={{
-          title: 'Ticket Queue',
+          title: 'Queue',
           tabBarIcon: ({ size, color }: { size: number; color: string }) => (
             <Ticket size={size} color={color} />
           ),
@@ -46,15 +55,6 @@ export default function OpsTabLayout() {
           title: 'Team',
           tabBarIcon: ({ size, color }: { size: number; color: string }) => (
             <Users size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="communication"
-        options={{
-          title: 'Messages',
-          tabBarIcon: ({ size, color }: { size: number; color: string }) => (
-            <MessageSquare size={size} color={color} />
           ),
         }}
       />

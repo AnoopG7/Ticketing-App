@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { 
   Bell, 
   Clock, 
@@ -184,7 +185,7 @@ export default function OpsWorkloadScreen() {
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       showsVerticalScrollIndicator={false}
     >
-      <LinearGradient colors={['#16A34A', '#22C55E']} style={styles.header}>
+      <LinearGradient colors={['#F59E0B', '#F97316']} style={styles.header}>
         <View style={styles.headerContent}>
           <View>
             <Text style={styles.greeting}>Ready to work! 💪</Text>
@@ -207,7 +208,7 @@ export default function OpsWorkloadScreen() {
             title="Assigned"
             value={stats.assignedTickets}
             icon={Target}
-            color="#16A34A"
+            color="#F59E0B"
           />
           <StatCard
             title="Completed"
@@ -232,7 +233,7 @@ export default function OpsWorkloadScreen() {
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>My Active Tasks</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/(tabs-ops)/tasks')}>
               <Text style={styles.viewAllText}>View All</Text>
             </TouchableOpacity>
           </View>
@@ -400,7 +401,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   viewAllText: {
-    color: '#16A34A',
+    color: '#F59E0B',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -449,7 +450,7 @@ const styles = StyleSheet.create({
   },
   taskCategory: {
     fontSize: 14,
-    color: '#16A34A',
+    color: '#F59E0B',
     fontWeight: '500',
     marginBottom: 8,
   },
@@ -515,7 +516,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   primaryAction: {
-    backgroundColor: '#16A34A',
+    backgroundColor: '#F59E0B',
   },
   actionIcon: {
     width: 56,

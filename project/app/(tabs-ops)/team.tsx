@@ -10,19 +10,11 @@ import {
   Alert,
 } from 'react-native';
 import { 
-  Clock, 
-  CheckCircle, 
-  AlertTriangle, 
   Users, 
-  Calendar,
-  TrendingUp,
-  Filter,
   MoreVertical,
   User,
   ArrowUp,
   ArrowDown,
-  MessageSquare,
-  Phone,
 } from 'lucide-react-native';
 
 interface TeamMember {
@@ -40,20 +32,6 @@ interface TeamMember {
     thisWeek: number;
     lastWeek: number;
   };
-}
-
-interface WorkloadTicket {
-  id: string;
-  title: string;
-  category: string;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  status: 'unassigned' | 'assigned' | 'in-progress' | 'review' | 'completed';
-  assignee?: string;
-  estimatedTime: number; // in hours
-  timeSpent: number; // in hours
-  dueDate: string;
-  createdAt: string;
-  studentName: string;
 }
 
 const mockTeamMembers: TeamMember[] = [
@@ -107,63 +85,8 @@ const mockTeamMembers: TeamMember[] = [
   },
 ];
 
-const mockWorkloadTickets: WorkloadTicket[] = [
-  {
-    id: 'wt1',
-    title: 'Library Access Card Not Working',
-    category: 'Library',
-    priority: 'high',
-    status: 'unassigned',
-    estimatedTime: 1,
-    timeSpent: 0,
-    dueDate: '2024-01-16',
-    createdAt: '2024-01-15T14:30:00Z',
-    studentName: 'Emma Doe',
-  },
-  {
-    id: 'wt2',
-    title: 'WiFi Connection Issues in Dorm',
-    category: 'Technical',
-    priority: 'urgent',
-    status: 'assigned',
-    assignee: 'tm2',
-    estimatedTime: 2,
-    timeSpent: 0.5,
-    dueDate: '2024-01-15',
-    createdAt: '2024-01-15T09:00:00Z',
-    studentName: 'Alex Doe',
-  },
-  {
-    id: 'wt3',
-    title: 'Course Registration Help',
-    category: 'Academic',
-    priority: 'medium',
-    status: 'in-progress',
-    assignee: 'tm3',
-    estimatedTime: 1.5,
-    timeSpent: 1,
-    dueDate: '2024-01-17',
-    createdAt: '2024-01-14T11:00:00Z',
-    studentName: 'John Smith',
-  },
-  {
-    id: 'wt4',
-    title: 'Classroom Projector Repair',
-    category: 'Facilities',
-    priority: 'low',
-    status: 'review',
-    assignee: 'tm4',
-    estimatedTime: 3,
-    timeSpent: 2.5,
-    dueDate: '2024-01-18',
-    createdAt: '2024-01-13T08:00:00Z',
-    studentName: 'System Request',
-  },
-];
-
 export default function OpsTeamScreen() {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(mockTeamMembers);
-  const [tickets, setTickets] = useState<WorkloadTicket[]>(mockWorkloadTickets);
   const [selectedTeamMember, setSelectedTeamMember] = useState<string | 'all'>('all');
   const [viewMode, setViewMode] = useState<'overview' | 'workload' | 'performance'>('overview');
   const [refreshing, setRefreshing] = useState(false);
@@ -180,16 +103,6 @@ export default function OpsTeamScreen() {
       case 'online': return '#10B981';
       case 'busy': return '#F59E0B';
       case 'offline': return '#6B7280';
-      default: return '#6B7280';
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'urgent': return '#DC2626';
-      case 'high': return '#EF4444';
-      case 'medium': return '#F59E0B';
-      case 'low': return '#10B981';
       default: return '#6B7280';
     }
   };
@@ -211,49 +124,37 @@ export default function OpsTeamScreen() {
     };
   };
 
-  const handleAssignTicket = (ticketId: string, memberId: string) => {
-    setTickets(prevTickets =>
-      prevTickets.map(ticket =>
-        ticket.id === ticketId
-          ? { ...ticket, assignee: memberId, status: 'assigned' }
-          : ticket
-      )
-    );
-    Alert.alert('Success', 'Ticket assigned successfully');
+  const getSortedTeamMembers = () => {
+    switch (viewMode) {
+      case 'workload':
+        return [...teamMembers].sort((a, b) => b.workloadCapacity - a.workloadCapacity);
+      case 'performance':
+        return [...teamMembers].sort((a, b) => b.performance.thisWeek - a.performance.thisWeek);
+      case 'overview':
+      default:
+        return teamMembers;
+    }
   };
 
-  const handleContactMember = (member: TeamMember, method: 'message' | 'call') => {
-    Alert.alert(
-      method === 'message' ? 'Send Message' : 'Call Member',
-      `${method === 'message' ? 'Messaging' : 'Calling'} ${member.name}`,
-      [
-        { text: 'Cancel', style: 'cancel' },
-        { text: 'Continue', onPress: () => {} },
-      ]
-    );
-  };
-
-  const filteredTickets = selectedTeamMember === 'all' 
-    ? tickets 
-    : tickets.filter(ticket => ticket.assignee === selectedTeamMember);
+  const sortedTeamMembers = getSortedTeamMembers();
 
   const teamStats = {
     totalMembers: teamMembers.length,
     activeMembers: teamMembers.filter(m => m.status === 'online').length,
     avgWorkload: Math.round(teamMembers.reduce((sum, member) => sum + member.workloadCapacity, 0) / teamMembers.length),
-    totalTickets: tickets.length,
-    unassignedTickets: tickets.filter(t => t.status === 'unassigned').length,
+    totalAssigned: teamMembers.reduce((sum, member) => sum + member.assignedTickets, 0),
   };
 
   const renderTeamMemberCard = ({ item }: { item: TeamMember }) => {
     const performanceTrend = getPerformanceTrend(item.performance.thisWeek, item.performance.lastWeek);
+    const isVertical = viewMode !== 'overview';
     
     return (
-      <TouchableOpacity style={styles.memberCard}>
+      <TouchableOpacity style={[styles.memberCard, isVertical && styles.memberCardVertical]}>
         <View style={styles.memberHeader}>
           <View style={styles.memberInfo}>
             <View style={styles.avatarContainer}>
-              <User color="#6366F1" size={20} />
+              <User color="#F59E0B" size={20} />
             </View>
             <View style={styles.memberDetails}>
               <Text style={styles.memberName}>{item.name}</Text>
@@ -265,6 +166,19 @@ export default function OpsTeamScreen() {
                 </Text>
               </View>
             </View>
+            {/* Show sorting indicator for workload/performance view */}
+            {viewMode === 'workload' && (
+              <View style={styles.sortIndicator}>
+                <Text style={styles.sortValue}>{item.workloadCapacity}%</Text>
+                <Text style={styles.sortLabel}>Workload</Text>
+              </View>
+            )}
+            {viewMode === 'performance' && (
+              <View style={styles.sortIndicator}>
+                <Text style={styles.sortValue}>{item.performance.thisWeek}</Text>
+                <Text style={styles.sortLabel}>This Week</Text>
+              </View>
+            )}
           </View>
           <TouchableOpacity style={styles.moreButton}>
             <MoreVertical color="#6B7280" size={16} />
@@ -328,62 +242,9 @@ export default function OpsTeamScreen() {
             </View>
           ))}
         </View>
-
-        <View style={styles.actionButtons}>
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={() => handleContactMember(item, 'message')}
-          >
-            <MessageSquare color="#6366F1" size={16} />
-            <Text style={styles.actionButtonText}>Message</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.actionButton}
-            onPress={() => handleContactMember(item, 'call')}
-          >
-            <Phone color="#6366F1" size={16} />
-            <Text style={styles.actionButtonText}>Call</Text>
-          </TouchableOpacity>
-        </View>
       </TouchableOpacity>
     );
   };
-
-  const renderUnassignedTicket = ({ item }: { item: WorkloadTicket }) => (
-    <TouchableOpacity style={styles.ticketCard}>
-      <View style={styles.ticketHeader}>
-        <View style={styles.ticketInfo}>
-          <View style={[styles.priorityIndicator, { backgroundColor: getPriorityColor(item.priority) }]} />
-          <Text style={styles.ticketTitle}>{item.title}</Text>
-        </View>
-        <View style={[styles.priorityBadge, { backgroundColor: getPriorityColor(item.priority) }]}>
-          <Text style={styles.priorityText}>{item.priority.toUpperCase()}</Text>
-        </View>
-      </View>
-
-      <Text style={styles.ticketStudent}>Student: {item.studentName}</Text>
-      <Text style={styles.ticketCategory}>{item.category} • Est. {item.estimatedTime}h</Text>
-
-      <View style={styles.ticketFooter}>
-        <Text style={styles.dueDate}>Due: {new Date(item.dueDate).toLocaleDateString()}</Text>
-        <TouchableOpacity 
-          style={styles.assignButton}
-          onPress={() => {
-            Alert.alert(
-              'Assign Ticket',
-              'Select team member to assign this ticket to:',
-              teamMembers.map(member => ({
-                text: member.name,
-                onPress: () => handleAssignTicket(item.id, member.id),
-              })).concat([{ text: 'Cancel', onPress: () => {} }])
-            );
-          }}
-        >
-          <Text style={styles.assignButtonText}>Assign</Text>
-        </TouchableOpacity>
-      </View>
-    </TouchableOpacity>
-  );
 
   const ViewModeButton = ({ mode, label }: { mode: string; label: string }) => (
     <TouchableOpacity
@@ -425,8 +286,8 @@ export default function OpsTeamScreen() {
           <Text style={styles.statLabel}>Avg Workload</Text>
         </View>
         <View style={styles.statItem}>
-          <Text style={[styles.statNumber, { color: '#EF4444' }]}>{teamStats.unassignedTickets}</Text>
-          <Text style={styles.statLabel}>Unassigned</Text>
+          <Text style={[styles.statNumber, { color: '#F59E0B' }]}>{teamStats.totalAssigned}</Text>
+          <Text style={styles.statLabel}>Assigned</Text>
         </View>
       </View>
 
@@ -441,28 +302,16 @@ export default function OpsTeamScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Team Members</Text>
         <FlatList
-          data={teamMembers}
+          data={sortedTeamMembers}
           keyExtractor={(item) => item.id}
           renderItem={renderTeamMemberCard}
-          horizontal
+          horizontal={viewMode === 'overview'}
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.membersList}
+          scrollEnabled={viewMode === 'overview'}
+          numColumns={viewMode === 'overview' ? 1 : 1}
+          contentContainerStyle={viewMode === 'overview' ? styles.membersList : styles.membersListVertical}
         />
       </View>
-
-      {/* Unassigned Tickets Section */}
-      {tickets.filter(t => t.status === 'unassigned').length > 0 && (
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Tickets Awaiting Assignment</Text>
-          <FlatList
-            data={tickets.filter(t => t.status === 'unassigned')}
-            keyExtractor={(item) => item.id}
-            renderItem={renderUnassignedTicket}
-            scrollEnabled={false}
-            contentContainerStyle={styles.ticketsList}
-          />
-        </View>
-      )}
     </ScrollView>
   );
 }
@@ -492,7 +341,7 @@ const styles = StyleSheet.create({
     color: '#1F2937',
   },
   addButton: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#F59E0B',
     borderRadius: 8,
     paddingHorizontal: 16,
     paddingVertical: 8,
@@ -551,7 +400,7 @@ const styles = StyleSheet.create({
     borderRadius: 6,
   },
   viewModeButtonActive: {
-    backgroundColor: '#6366F1',
+    backgroundColor: '#F59E0B',
   },
   viewModeText: {
     fontSize: 14,
@@ -574,6 +423,10 @@ const styles = StyleSheet.create({
   membersList: {
     gap: 16,
   },
+  membersListVertical: {
+    gap: 16,
+    paddingBottom: 20,
+  },
   memberCard: {
     backgroundColor: 'white',
     borderRadius: 16,
@@ -584,6 +437,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
+  },
+  memberCardVertical: {
+    width: '100%',
+    marginBottom: 0,
   },
   memberHeader: {
     flexDirection: 'row',
@@ -652,7 +509,7 @@ const styles = StyleSheet.create({
   memberStatNumber: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#6366F1',
+    color: '#F59E0B',
     marginBottom: 2,
   },
   memberStatLabel: {
@@ -707,111 +564,32 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   expertiseTag: {
-    backgroundColor: '#EEF2FF',
+    backgroundColor: '#FEF3C7',
     borderRadius: 6,
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   expertiseText: {
     fontSize: 10,
-    color: '#6366F1',
+    color: '#F59E0B',
     fontWeight: '500',
   },
-  actionButtons: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  actionButton: {
-    flex: 1,
-    flexDirection: 'row',
+  sortIndicator: {
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-    paddingVertical: 8,
-    borderWidth: 1,
-    borderColor: '#6366F1',
+    backgroundColor: '#FEF3C7',
     borderRadius: 8,
-  },
-  actionButtonText: {
-    fontSize: 12,
-    color: '#6366F1',
-    fontWeight: '600',
-  },
-  ticketsList: {
-    gap: 12,
-  },
-  ticketCard: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  ticketHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    marginBottom: 8,
-  },
-  ticketInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    flex: 1,
-  },
-  priorityIndicator: {
-    width: 4,
-    height: 16,
-    borderRadius: 2,
-  },
-  ticketTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#1F2937',
-    flex: 1,
-  },
-  priorityBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 4,
-  },
-  priorityText: {
-    fontSize: 9,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  ticketStudent: {
-    fontSize: 12,
-    color: '#6366F1',
-    fontWeight: '500',
-    marginBottom: 4,
-  },
-  ticketCategory: {
-    fontSize: 12,
-    color: '#6B7280',
-    marginBottom: 12,
-  },
-  ticketFooter: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  dueDate: {
-    fontSize: 12,
-    color: '#6B7280',
-  },
-  assignButton: {
-    backgroundColor: '#6366F1',
-    borderRadius: 6,
     paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingVertical: 8,
   },
-  assignButtonText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: 'white',
+  sortValue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#F59E0B',
+    marginBottom: 2,
+  },
+  sortLabel: {
+    fontSize: 10,
+    color: '#92400E',
+    fontWeight: '500',
   },
 });
