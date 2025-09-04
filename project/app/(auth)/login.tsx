@@ -13,18 +13,21 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { User, Lock, Eye, EyeOff } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { useAuth, UserRole } from '@/contexts/AuthContext';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<'student' | 'ops' | 'admin'>('student');
+  const [selectedRole, setSelectedRole] = useState<UserRole>('student');
   const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
 
   const roles = [
-    { key: 'student', label: 'Student/Parent', color: '#2563EB', icon: '👨‍🎓' },
-    { key: 'ops', label: 'Operations', color: '#16A34A', icon: '⚙️' },
-    { key: 'admin', label: 'Administrator', color: '#7C3AED', icon: '👑' },
+    { key: 'student' as UserRole, label: 'Student', color: '#2563EB', icon: '👨‍🎓' },
+    { key: 'parent' as UserRole, label: 'Parent', color: '#059669', icon: '👨‍👩‍👧‍👦' },
+    { key: 'ops' as UserRole, label: 'Operations', color: '#16A34A', icon: '⚙️' },
+    { key: 'admin' as UserRole, label: 'Administrator', color: '#7C3AED', icon: '👑' },
   ];
 
   const handleLogin = async () => {
@@ -35,11 +38,29 @@ export default function LoginScreen() {
 
     setLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      await login(email, password, selectedRole);
+      
+      // Role-based routing
+      switch (selectedRole) {
+        case 'student':
+          router.replace('/(tabs)');
+          break;
+        case 'parent':
+          router.replace('/(tabs-parent)');
+          break;
+        case 'ops':
+          router.replace('/(tabs-ops)');
+          break;
+        case 'admin':
+          router.replace('/(tabs-admin)');
+          break;
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Login failed. Please try again.');
+    } finally {
       setLoading(false);
-      router.replace('/(tabs)');
-    }, 1500);
+    }
   };
 
   return (
