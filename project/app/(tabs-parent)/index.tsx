@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Bell, Clock, CheckCircle, AlertTriangle, Users, Calendar, Ticket, BookOpen } from 'lucide-react-native';
+import { router } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -175,20 +176,15 @@ export default function ParentDashboardScreen() {
         <View style={styles.quickActions}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
-            <TouchableOpacity style={[styles.actionCard, styles.primaryAction]}>
+            <TouchableOpacity 
+              style={[styles.actionCard, styles.primaryAction]}
+              onPress={() => router.push('/tickets/create')}
+            >
               <View style={styles.actionIcon}>
                 <Ticket color="white" size={28} />
               </View>
-              <Text style={styles.actionTitle}>New Request</Text>
-              <Text style={styles.actionSubtitle}>Submit for child</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.actionCard}>
-              <View style={[styles.actionIcon, { backgroundColor: '#3B82F620' }]}>
-                <Users color="#3B82F6" size={28} />
-              </View>
-              <Text style={styles.actionTitle}>Children</Text>
-              <Text style={styles.actionSubtitle}>Manage profiles</Text>
+              <Text style={[styles.actionTitle, styles.primaryActionText]}>New Request</Text>
+              <Text style={[styles.actionSubtitle, styles.primaryActionText]}>Submit for child</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.actionCard}>
@@ -199,13 +195,13 @@ export default function ParentDashboardScreen() {
               <Text style={styles.actionSubtitle}>View events</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionCard}>
+            {/* <TouchableOpacity style={styles.actionCard}>
               <View style={[styles.actionIcon, { backgroundColor: '#8B5CF620' }]}>
                 <BookOpen color="#8B5CF6" size={28} />
               </View>
               <Text style={styles.actionTitle}>Academic</Text>
               <Text style={styles.actionSubtitle}>Progress & grades</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
 
@@ -374,14 +370,17 @@ const styles = StyleSheet.create({
   actionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#1F2937',
     marginBottom: 4,
     textAlign: 'center',
+    color: '#1F2937',
   },
   actionSubtitle: {
     fontSize: 14,
-    color: '#6B7280',
     textAlign: 'center',
+    color: '#6B7280',
+  },
+  primaryActionText: {
+    color: 'white',
   },
   recentActivity: {
     backgroundColor: 'white',

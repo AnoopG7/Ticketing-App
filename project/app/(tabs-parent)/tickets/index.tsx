@@ -230,13 +230,13 @@ export default function SupportCenterScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <LinearGradient colors={['#059669', '#047857']} style={styles.header}>
-        <Text style={styles.headerTitle}>Support Center</Text>
+        <Text style={styles.headerTitle}>Tickets</Text>
         <Text style={styles.headerSubtitle}>
           Manage tickets for your family
         </Text>
         <TouchableOpacity 
           style={styles.createButton}
-          onPress={() => router.push('/(tabs-parent)/tickets/create')}
+          onPress={() => router.push('/tickets/create')}
         >
           <Plus size={20} color="white" />
           <Text style={styles.createButtonText}>New Ticket</Text>

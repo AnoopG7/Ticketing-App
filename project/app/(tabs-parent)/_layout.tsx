@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import { Home, Ticket, Bell, User, Users } from 'lucide-react-native';
+import { Home, Ticket, Bell, User } from 'lucide-react-native';
 
 export default function ParentTabLayout() {
   return (
@@ -34,18 +34,9 @@ export default function ParentTabLayout() {
       <Tabs.Screen
         name="tickets"
         options={{
-          title: 'Family Tickets',
+          title: 'Tickets',
           tabBarIcon: ({ size, color }) => (
             <Ticket size={size} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="children"
-        options={{
-          title: 'Children',
-          tabBarIcon: ({ size, color }) => (
-            <Users size={size} color={color} />
           ),
         }}
       />
