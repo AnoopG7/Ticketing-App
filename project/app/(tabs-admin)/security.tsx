@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Shield,
   Lock,
@@ -148,7 +148,7 @@ export default function SecurityScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#F59E0B', '#F97316']} style={styles.header}>
         <View style={styles.headerContent}>
           <View style={styles.headerTop}>

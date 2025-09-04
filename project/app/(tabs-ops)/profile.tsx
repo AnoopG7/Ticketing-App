@@ -5,10 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
   Switch,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   User,
   Bell,
@@ -186,7 +186,7 @@ export default function OpsProfileScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#F59E0B', '#F97316']} style={styles.header}>
         <View style={styles.profileHeader}>
           <View style={styles.avatarContainer}>

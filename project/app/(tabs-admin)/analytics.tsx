@@ -5,9 +5,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   BarChart3,
   TrendingUp,
@@ -194,7 +194,7 @@ export default function AdminAnalyticsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#7C3AED', '#8B5CF6']} style={styles.header}>
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>Advanced Analytics</Text>

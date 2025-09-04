@@ -5,8 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Search,
   Filter,
@@ -188,7 +188,7 @@ export default function TasksScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       {/* Header */}
       <LinearGradient colors={['#F59E0B', '#F97316']} style={styles.header}>
         <Text style={styles.headerTitle}>Task Management</Text>

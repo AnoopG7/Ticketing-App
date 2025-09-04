@@ -9,8 +9,8 @@ import {
   RefreshControl,
   Alert,
   TextInput,
-  SafeAreaView,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { 
   User,
   Users,
@@ -317,7 +317,7 @@ export default function AdminUsersScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#7C3AED', '#8B5CF6']} style={styles.header}>
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>User Management</Text>

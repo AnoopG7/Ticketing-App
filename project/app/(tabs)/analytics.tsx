@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ChartBar as BarChart3, TrendingUp, Clock, CircleCheck as CheckCircle, Users, Calendar, Filter } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
@@ -43,7 +44,8 @@ export default function AnalyticsScreen() {
   ];
 
   return (
-    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Analytics</Text>
         <TouchableOpacity style={styles.filterButton}>
@@ -105,10 +107,15 @@ export default function AnalyticsScreen() {
         </View>
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
   container: {
     flex: 1,
     backgroundColor: '#F8FAFC',

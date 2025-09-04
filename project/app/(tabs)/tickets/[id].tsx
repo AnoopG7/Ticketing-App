@@ -8,6 +8,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ArrowLeft, Clock, CircleCheck as CheckCircle, CircleAlert as AlertCircle, User, MessageCircle, Send, Camera } from 'lucide-react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 
@@ -143,7 +144,8 @@ export default function TicketDetailScreen() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.safeArea} edges={['top']}>
+      <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
@@ -232,10 +234,15 @@ export default function TicketDetailScreen() {
         </View>
       </View>
     </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#F8FAFC',
+  },
   container: {
     flex: 1,
     backgroundColor: '#F8FAFC',

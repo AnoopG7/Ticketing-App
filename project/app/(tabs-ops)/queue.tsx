@@ -5,9 +5,10 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
   Alert,
+  RefreshControl,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Filter,
   Search,
@@ -261,7 +262,7 @@ export default function OpsQueueScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#F59E0B', '#F97316']} style={styles.header}>
         <Text style={styles.headerTitle}>Ticket Queue</Text>
         <Text style={styles.headerSubtitle}>

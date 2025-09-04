@@ -8,6 +8,7 @@ import {
   RefreshControl,
   Dimensions,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Bell, Clock, CheckCircle, AlertTriangle, Users, Calendar, Ticket, BookOpen } from 'lucide-react-native';
 import { router } from 'expo-router';

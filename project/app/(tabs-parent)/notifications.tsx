@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  SafeAreaView,
+  Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Bell,
   BellDot,
@@ -168,7 +169,7 @@ export default function NotificationsScreen() {
   const actionRequiredCount = notifications.filter(n => n.actionRequired && !n.isRead).length;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient colors={['#059669', '#047857']} style={styles.header}>
         <View style={styles.headerContent}>
           <View>
