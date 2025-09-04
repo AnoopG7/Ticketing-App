@@ -9,6 +9,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { 
   Bell, 
   TrendingUp, 
@@ -244,7 +245,10 @@ export default function AdminDashboardScreen() {
         <View style={styles.quickActions}>
           <Text style={styles.sectionTitle}>Admin Actions</Text>
           <View style={styles.actionsGrid}>
-            <TouchableOpacity style={[styles.actionCard, styles.primaryAction]}>
+            <TouchableOpacity 
+              style={[styles.actionCard, styles.primaryAction]}
+              onPress={() => router.push('/add-user')}
+            >
               <View style={styles.actionIcon}>
                 <UserPlus color="white" size={28} />
               </View>
@@ -252,7 +256,10 @@ export default function AdminDashboardScreen() {
               <Text style={styles.actionSubtitle}>Create account</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity 
+              style={styles.actionCard}
+              onPress={() => router.push('/analytics')}
+            >
               <View style={[styles.actionIcon, { backgroundColor: '#3B82F620' }]}>
                 <BarChart3 color="#3B82F6" size={28} />
               </View>
@@ -260,7 +267,10 @@ export default function AdminDashboardScreen() {
               <Text style={styles.actionSubtitle}>Generate</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity 
+              style={styles.actionCard}
+              onPress={() => router.push('/settings')}
+            >
               <View style={[styles.actionIcon, { backgroundColor: '#10B98120' }]}>
                 <Settings color="#10B981" size={28} />
               </View>
@@ -268,7 +278,10 @@ export default function AdminDashboardScreen() {
               <Text style={styles.actionSubtitle}>System config</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity 
+              style={styles.actionCard}
+              onPress={() => router.push('/security')}
+            >
               <View style={[styles.actionIcon, { backgroundColor: '#F59E0B20' }]}>
                 <Shield color="#F59E0B" size={28} />
               </View>

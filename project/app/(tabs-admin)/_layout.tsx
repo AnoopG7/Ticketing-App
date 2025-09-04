@@ -67,6 +67,29 @@ export default function AdminTabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="security"
+        options={{
+          title: 'Security',
+          tabBarIcon: ({ size, color }: { size: number; color: string }) => (
+            <Shield size={size} color={color} />
+          ),
+        }}
+      />
+      
+      {/* Hidden screens - accessible only through navigation */}
+      <Tabs.Screen
+        name="add-user"
+        options={{
+          href: null, // Hide from tab bar
+        }}
+      />
+      <Tabs.Screen
+        name="ticket-detail"
+        options={{
+          href: null, // Hide from tab bar
+        }}
+      />
     </Tabs>
   );
 }

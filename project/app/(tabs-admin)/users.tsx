@@ -9,6 +9,7 @@ import {
   RefreshControl,
   Alert,
   TextInput,
+  SafeAreaView,
 } from 'react-native';
 import { 
   User,
@@ -25,6 +26,8 @@ import {
   Settings,
   UserPlus,
 } from 'lucide-react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 
 interface SystemUser {
   id: string;
@@ -314,16 +317,25 @@ export default function AdminUsersScreen() {
   };
 
   return (
-    <ScrollView 
-      style={styles.container}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>User Management</Text>
-        <TouchableOpacity style={styles.addButton}>
-          <UserPlus color="white" size={20} />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      <LinearGradient colors={['#7C3AED', '#8B5CF6']} style={styles.header}>
+        <View style={styles.headerContent}>
+          <Text style={styles.headerTitle}>User Management</Text>
+          <Text style={styles.headerSubtitle}>Manage system users and their permissions</Text>
+          <TouchableOpacity 
+            style={styles.addButton}
+            onPress={() => router.push('/add-user')}
+          >
+            <UserPlus color="white" size={20} />
+            <Text style={styles.addButtonText}>Add User</Text>
+          </TouchableOpacity>
+        </View>
+      </LinearGradient>
+
+      <ScrollView 
+        style={styles.scrollContent}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      >
 
       {/* User Stats */}
       <View style={styles.statsContainer}>
@@ -415,6 +427,7 @@ export default function AdminUsersScreen() {
         />
       </View>
     </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -424,33 +437,40 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8FAFC',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 50,
-    paddingBottom: 20,
-    backgroundColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
+    paddingTop: 20,
+    paddingBottom: 24,
+  },
+  headerContent: {
+    gap: 8,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    color: '#1F2937',
+    color: 'white',
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    marginBottom: 16,
   },
   addButton: {
-    backgroundColor: '#DC2626',
-    borderRadius: 12,
-    padding: 12,
-    shadowColor: '#DC2626',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+    alignSelf: 'flex-start',
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  scrollContent: {
+    flex: 1,
   },
   statsContainer: {
     flexDirection: 'row',
