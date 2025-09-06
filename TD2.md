@@ -179,7 +179,7 @@ The mobile application implements sophisticated data synchronization to handle t
 The mobile security architecture addresses the unique challenges of mobile applications while maintaining enterprise-grade security.
 
 **Authentication Architecture**: Multi-layered authentication designed for mobile usage patterns:
-- **Biometric Authentication**: Integration with device biometric capabilities
+- **Biometric Authentication**: Integration with device biometric capabilities //comment
 - **Token Management**: Secure storage and automatic refresh of JWT tokens
 - **Device Registration**: Device-specific authentication for enhanced security
 - **Session Management**: Automatic session timeout and renewal
@@ -769,7 +769,6 @@ React Native applications face unique performance and scalability challenges tha
 
 **Network Performance Optimization**: Mobile networks present unique challenges including variable bandwidth, high latency, and intermittent connectivity. The app should implement intelligent caching strategies that prioritize critical data, compress data transfers to minimize bandwidth usage, and provide meaningful offline functionality. Network optimization should include request batching, intelligent retry logic, and adaptive quality settings based on connection speed.
 
-**Battery Life Optimization**: Mobile applications must be conscious of battery consumption to maintain user satisfaction. The app should implement efficient background processing, minimize location service usage, and optimize push notification handling to reduce battery drain. Battery optimization should include intelligent sync scheduling, efficient image processing, and proper management of device sensors and connectivity features.
 
 **Scalability Architecture**: The mobile app architecture should support scaling to thousands of concurrent users while maintaining performance. This includes efficient state management that doesn't degrade with large datasets, optimized list rendering for large numbers of tickets, and intelligent data pagination to prevent memory issues. The real-time system should scale efficiently with proper connection pooling and message optimization.
 
@@ -781,7 +780,6 @@ The React Native implementation provides a foundation for advanced mobile featur
 
 **Advanced Mobile Features**: Enhanced mobile capabilities could include augmented reality features for facility issue reporting, where users can point their camera at problems and automatically generate tickets with location and visual context. Integration with campus IoT systems could enable automatic issue detection and ticket creation, while advanced location services could provide indoor navigation to help users find the appropriate offices for in-person assistance.
 
-**Wearable Device Integration**: The system could expand to include smartwatch applications that provide quick access to ticket status, urgent notifications, and basic ticket creation capabilities. Wearable integration could include health monitoring for attendance-related issues or emergency notification systems for campus safety concerns.
 
 **Advanced Analytics and Insights**: Mobile-specific analytics could provide insights into user behavior patterns, identify optimal times for system maintenance based on usage data, and provide predictive modeling for resource allocation. Advanced reporting could include location-based analytics for facility issues and mobile-specific performance metrics for continuous optimization.
 

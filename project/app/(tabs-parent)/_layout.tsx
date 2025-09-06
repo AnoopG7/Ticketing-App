@@ -36,7 +36,7 @@ export default function ParentTabLayout() {
       <Tabs.Screen
         name="tickets"
         options={{
-          title: 'Tickets',
+          title: 'Family Tickets',
           tabBarIcon: ({ size, color }) => (
             <Ticket size={size} color={color} />
           ),

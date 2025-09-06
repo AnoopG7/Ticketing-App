@@ -8,6 +8,7 @@ import {
   Switch,
   Alert,
   TextInput,
+  Modal,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
@@ -26,8 +27,11 @@ import {
   Trash2,
   Save,
   RefreshCw,
+  LogOut,
+  X,
 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface Category {
   id: string;
@@ -58,9 +62,11 @@ interface SystemSettings {
 }
 
 export default function AdminSettingsScreen() {
+  const { logout, user } = useAuth();
   const [activeSection, setActiveSection] = useState<'categories' | 'departments' | 'system' | 'notifications'>('categories');
   const [showAddCategory, setShowAddCategory] = useState(false);
   const [showAddDepartment, setShowAddDepartment] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const [categories, setCategories] = useState<Category[]>([
     { id: '1', name: 'Technical Support', description: 'IT and technical issues', color: '#3B82F6', isActive: true, ticketCount: 245 },
@@ -112,6 +118,19 @@ export default function AdminSettingsScreen() {
 
   const handleSaveSettings = () => {
     Alert.alert('Success', 'Settings have been saved successfully');
+  };
+
+  const handleLogout = () => {
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutModal(false);
+    logout();
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   const SectionButton = ({ title, section, icon: Icon }: any) => (
@@ -410,10 +429,16 @@ export default function AdminSettingsScreen() {
         <View style={styles.headerContent}>
           <Text style={styles.headerTitle}>System Settings</Text>
           <Text style={styles.headerSubtitle}>Configure categories, departments, and system behavior</Text>
-          <TouchableOpacity style={styles.saveButton} onPress={handleSaveSettings}>
-            <Save color="white" size={18} />
-            <Text style={styles.saveButtonText}>Save Changes</Text>
-          </TouchableOpacity>
+          <View style={styles.headerButtons}>
+            <TouchableOpacity style={styles.saveButton} onPress={handleSaveSettings}>
+              <Save color="white" size={18} />
+              <Text style={styles.saveButtonText}>Save Changes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.headerLogoutButton} onPress={handleLogout}>
+              <LogOut color="white" size={18} />
+              <Text style={styles.headerLogoutButtonText}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </LinearGradient>
 
@@ -429,6 +454,56 @@ export default function AdminSettingsScreen() {
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {renderContent()}
       </ScrollView>
+
+      {/* Custom Logout Modal for Web */}
+      <Modal
+        visible={showLogoutModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={cancelLogout}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Confirm Logout</Text>
+              <TouchableOpacity 
+                style={styles.modalCloseButton}
+                onPress={cancelLogout}
+              >
+                <X color="#6B7280" size={20} />
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.modalBody}>
+              <View style={styles.modalIcon}>
+                <LogOut color="#EF4444" size={32} />
+              </View>
+              <Text style={styles.modalMessage}>
+                Are you sure you want to logout? You will be redirected to the login screen.
+              </Text>
+              <Text style={styles.modalSubMessage}>
+                Logged in as: {user?.name || 'Administrator'}
+              </Text>
+            </View>
+
+            <View style={styles.modalActions}>
+              <TouchableOpacity 
+                style={styles.modalCancelButton}
+                onPress={cancelLogout}
+              >
+                <Text style={styles.modalCancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.modalConfirmButton}
+                onPress={confirmLogout}
+              >
+                <LogOut color="white" size={16} />
+                <Text style={styles.modalConfirmText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -456,6 +531,10 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.9)',
     marginBottom: 16,
   },
+  headerButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
   saveButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -464,9 +543,24 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     gap: 6,
-    alignSelf: 'flex-start',
   },
   saveButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  headerLogoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(239, 68, 68, 0.3)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 6,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  headerLogoutButtonText: {
     color: 'white',
     fontSize: 14,
     fontWeight: '600',
@@ -715,5 +809,102 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#6B7280',
     marginBottom: 12,
+  },
+  // Modal styles for web logout
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 0,
+    maxWidth: 400,
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.25,
+    shadowRadius: 20,
+    elevation: 10,
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1F2937',
+  },
+  modalCloseButton: {
+    padding: 4,
+  },
+  modalBody: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FEE2E2',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#374151',
+    textAlign: 'center',
+    marginBottom: 8,
+    lineHeight: 24,
+  },
+  modalSubMessage: {
+    fontSize: 14,
+    color: '#6B7280',
+    textAlign: 'center',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    gap: 12,
+    padding: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#E5E7EB',
+  },
+  modalCancelButton: {
+    flex: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+  },
+  modalCancelText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#374151',
+  },
+  modalConfirmButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    backgroundColor: '#EF4444',
+    gap: 8,
+  },
+  modalConfirmText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: 'white',
   },
 });

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { router } from 'expo-router';
 
 export type UserRole = 'student' | 'parent' | 'ops' | 'admin';
 
@@ -90,8 +91,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
+    try {
+      // Clear authentication state first
+      setUser(null);
+      setIsAuthenticated(false);
+      
+      // For web, use replace to clear navigation stack
+      if (typeof window !== 'undefined') {
+        router.replace('/(auth)/login');
+      } else {
+        // For mobile, push is fine
+        router.push('/(auth)/login');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Fallback: force navigation to login
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      } else {
+        router.replace('/(auth)/login');
+      }
+    }
   };
 
   return (
